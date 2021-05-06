@@ -34,47 +34,80 @@ CREATE TABLE LUGARTIPO (
 )
 
 CREATE TABLE ESTACAO (
-	
+	nome varchar(25),
+	tipo char(10),
+	nplataforma tinyint,
+	localidade int
 )
 
 CREATE TABLE VIAGEM (
-	
+	ident int,
+	dataviagem date,
+	horapartida time,
+	horachegada time,
+	distancia int,
+	estpartida varchar(40),
+	estchegada varchar(40)
 )
 
 CREATE TABLE RESERVA (
-	
-
+	ident int,
+	datareserva smalldatetime,
+	modopagamento char(10),
+	viagem int
+)
 
 CREATE TABLE TRANSPORTE (
-	
+	ident tinyint,
+	viagem int,
+	velmaxima int,
+	dataentradaserviço date,
+	atrdiscriminante char(1)
 )
 
 CREATE TABLE AUTOCARRO (
-	
+	matricula nchar(10),
+	transporte tinyint,
+	datarevisao date,
+	marca nchar(10),
+	modelo nchar(6)
 )
 
 CREATE TABLE COMBOIO (
-	
+	transporte tinyint,
+	tipo char(2),
+	ncarruagens tinyint
 )
 
 CREATE TABLE LUGAR (
-	
+	numero int,
+	transporte int
+	tipo int
 )
 
 CREATE TABLE PAGMBWAY (
-	
+	reserva int,
+	telefone varchar(25)
 )
 
 CREATE TABLE BILHETE (
-	
+	passageiro char(10),
+	nlugar int,
+	tipolugar int,
+	transporte int,
+	reserva int
 )
 
 CREATE TABLE LOCOMOTIVA (
-	
+	nserie int,
+	comboio tinyint,
+	marca varchar(15)
 )
 
 CREATE TABLE ALFAPENDULAR (
-	
+	nserie int,
+	comboio tinyint,
+	numero int
 )
 
 
