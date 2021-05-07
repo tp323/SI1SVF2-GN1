@@ -81,7 +81,7 @@ CREATE TABLE COMBOIO (
 
 CREATE TABLE LUGAR (
 	numero int,
-	transporte int
+	transporte int,
 	tipo int
 )
 
