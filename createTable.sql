@@ -34,7 +34,7 @@ CREATE TABLE LUGARTIPO (
 )
 
 CREATE TABLE ESTACAO (
-	nome varchar(25),
+	nome varchar(40),
 	tipo char(10),
 	nplataforma tinyint,
 	localidade int
