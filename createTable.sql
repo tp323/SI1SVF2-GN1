@@ -16,18 +16,22 @@ CREATE TABLE LOCALIDADE (
 
 CREATE TABLE AUTOCARROTIPO (
 	marca nchar(10) check(marca in ('MAN', 'VOLVO', 'IVECO', 'TEMSA')),
-	modelo nchar(6) check(modelo in ('City C', 'City L', '9700', '9900', 'MAGELYS 12.8', 'MAGELYS PRO', 'SAFARI', 'METROPOL')),
+	modelo nchar(6) check(modelo in ('City C', 'City L', '9700', '9900', '12.8', 'PRO', 'SAFARI', 'METROP')),
 	nlugares tinyint check (nlugares>=33), --menos numero de lugar entre os modelos disponiveis
-    primary key (marca, modelo)
+    primary key (marca,modelo)
 )
 
 
-CREATE TABLE COMBOIOTIPO (
-	id char(2) check (id in ('AP', 'IC', 'IR', 'R')),
-	nome char(25) check (nome in ('alfa-pendular', 'inter-cidades', 'inter-regional', 'regional')),
-	nlugclasse1 tinyint check ((nome = 'alfa-pendular' and nlugclasse1 = 299) or (nome != 'alfa-pendular' and nlugclasse1 <= 100 and nlugclasse1 >= 10)),
-	nlugclasse2 tinyint check ((nome = 'alfa-pendular' and nlugclasse1 = 299) or (nome != 'alfa-pendular' and nlugclasse2 <= 250 and nlugclasse2 >= 100)),
-	primary key (id)
+CREATE TABLE COMBOIOTIPO
+(
+    id          char(2) check (id in ('AP', 'IC', 'IR', 'R')),
+    nome        char(25) check (nome in ('alfa-pendular', 'inter-cidades', 'inter-regional', 'regional')),
+    nlugclasse1 tinyint,
+    nlugclasse2 tinyint,
+    primary key (id),
+    check (((nome != 'alfa-pendular') and (nlugclasse1 <= 100 and nlugclasse1 >= 10) and
+            (nlugclasse2 <= 250 and nlugclasse2 >= 100))
+        or (nome = 'alfa-pendular' and (299-nlugclasse2) = nlugclasse1))
 )
 
 CREATE TABLE LUGARTIPO (
@@ -50,11 +54,13 @@ CREATE TABLE VIAGEM (
 	ident int unique ,
 	dataviagem date,
 	horapartida time,
-	horachegada time check (horachegada > horapartida),
+	horachegada time ,
 	distancia int,
 	estpartida varchar(40) references ESTACAO(nome),
-	estchegada varchar(40) references ESTACAO(nome) check (estchegada != estpartida),
-	primary key (ident)
+	estchegada varchar(40) references ESTACAO(nome) ,
+	primary key (ident),
+	check (estchegada != estpartida),
+	check (horachegada > horapartida),
 )
 
 CREATE TABLE RESERVA (
@@ -75,25 +81,27 @@ CREATE TABLE TRANSPORTE (
 )
 
 CREATE TABLE AUTOCARRO (
-	matricula nchar(10) unique check(matricula like '[A-Z][A-Z]-[0-9][0-9]-[A-Z][A-Z]'),
+	matricula nchar(10) check([matricula] like '[A-Z][A-Z] [0-9][0-9] [A-Z][A-Z]'),
 	transporte tinyint references TRANSPORTE(ident),
-	datarevisao date not null check (GETDATE()<datarevisao), --rever isto
-	marca nchar(10) references AUTOCARROTIPO(marca),
-	modelo nchar(6) references AUTOCARROTIPO(modelo),
-	primary key (matricula,transporte)
+	datarevisao date not null check (DATEDIFF(day, getdate(),datarevisao) > 0), --rever isto
+	marca nchar(10),
+	modelo nchar(6),
+	primary key (matricula,transporte),
+    foreign key (marca,modelo) references AUTOCARROTIPO(marca, modelo)
 )
 
 CREATE TABLE COMBOIO (
 	transporte tinyint references TRANSPORTE(ident),
 	tipo char(2) references COMBOIOTIPO(id),
-	ncarruagens tinyint check ((ncarruagens <= 8 and tipo != 'AP') or (ncarruagens <= 6 and tipo != 'AP')),
-	primary key (transporte)
+	ncarruagens tinyint ,
+	primary key (transporte),
+	check ((ncarruagens <= 8 and tipo != 'AP') or (ncarruagens <= 6 and tipo != 'AP'))
 )
 
 CREATE TABLE LUGAR (
-	numero int,
-	transporte int references TRANSPORTE(ident),
-	tipo int references LUGARTIPO(numero),
+	numero int unique ,
+	transporte tinyint unique references TRANSPORTE(ident),
+	tipo int unique references LUGARTIPO(numero),
 	primary key (numero, transporte, tipo)
 )
 
@@ -105,24 +113,27 @@ CREATE TABLE PAGMBWAY (
 
 CREATE TABLE BILHETE (
 	passageiro char(10) references PASSAGEIRO(nid),
-	nlugar int references LUGAR(numero),
-	tipolugar int references LUGAR(tipo),
-	transporte int references LUGAR(transporte),
-	reserva int references RESERVA(ident)
+	nlugar int ,
+	tipolugar int,
+	transporte tinyint,
+	reserva int references RESERVA(ident),
+    primary key (passageiro,nlugar,tipolugar,transporte,reserva),
+    foreign key (nlugar,transporte,tipolugar) references LUGAR(numero, transporte, tipo)
 )
 
 CREATE TABLE LOCOMOTIVA (
-	nserie int,
-	comboio tinyint references COMBOIO(transporte),
-	marca varchar(15),
+	nserie int unique ,
+	comboio tinyint unique references COMBOIO(transporte),
+	marca varchar(15) check (marca in ('Stadler','Medway','Mehano','Roco')),
 	primary key (nserie,comboio)
 )
 
 CREATE TABLE ALFAPENDULAR (
-	nserie int references LOCOMOTIVA(nserie),
-	comboio tinyint references LOCOMOTIVA(comboio),
+	nserie int ,
+	comboio tinyint,
 	numero int,
-	primary key (nserie,comboio)
+	primary key (nserie,comboio),
+	foreign key (nserie,comboio) references LOCOMOTIVA(nserie, comboio)
 )
 
 
