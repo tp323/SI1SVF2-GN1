@@ -81,7 +81,7 @@ CREATE TABLE TRANSPORTE (
 )
 
 CREATE TABLE AUTOCARRO (
-	matricula nchar(10) check([matricula] like '[A-Z][A-Z] [0-9][0-9] [A-Z][A-Z]'),
+	matricula nchar(8) check([matricula] like ('[A-Z][A-Z]-[0-9][0-9]-[A-Z][A-Z]')),
 	transporte tinyint references TRANSPORTE(ident),
 	datarevisao date not null check (DATEDIFF(day, getdate(),datarevisao) > 0), --rever isto
 	marca nchar(10),
@@ -95,13 +95,13 @@ CREATE TABLE COMBOIO (
 	tipo char(2) references COMBOIOTIPO(id),
 	ncarruagens tinyint ,
 	primary key (transporte),
-	check ((ncarruagens <= 8 and tipo != 'AP') or (ncarruagens <= 6 and tipo != 'AP'))
+	check ((ncarruagens <= 8 and tipo = 'AP') or (ncarruagens <= 6 and tipo != 'AP'))
 )
 
 CREATE TABLE LUGAR (
-	numero int unique ,
-	transporte tinyint unique references TRANSPORTE(ident),
-	tipo int unique references LUGARTIPO(numero),
+	numero int,
+	transporte tinyint references TRANSPORTE(ident),
+	tipo int references LUGARTIPO(numero),
 	primary key (numero, transporte, tipo)
 )
 
@@ -123,7 +123,7 @@ CREATE TABLE BILHETE (
 
 CREATE TABLE LOCOMOTIVA (
 	nserie int unique ,
-	comboio tinyint unique references COMBOIO(transporte),
+	comboio tinyint references COMBOIO(transporte),
 	marca varchar(15) check (marca in ('Stadler','Medway','Mehano','Roco')),
 	primary key (nserie,comboio)
 )

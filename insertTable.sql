@@ -72,8 +72,8 @@
             (9,456,130,'2020-08-21','C')
 
         insert into AUTOCARRO values
-            ('CF 01 RF',2,'2022-03-26','VOLVO','9900'),
-            ('BC 97 HD',4,'2022-02-02','IVECO','PRO')
+            ('CF-01-RF',2,'2022-03-26','VOLVO','9900'),
+            ('BC-97-HD',4,'2022-02-02','IVECO','PRO')
 
         insert into COMBOIO values
             (3,'AP',8),
@@ -110,11 +110,11 @@
             (897,6,'Roco'),
             (145,7,'Stadler'),
             (345,8,'Medway'),
-            (741,4,'Mehano'),
+            (741,3,'Mehano'),
             (648,9,'Medway')
 
         insert into ALFAPENDULAR values
-            (741,4,8),
+            (741,3,8),
             (648,9,10)
 
 
