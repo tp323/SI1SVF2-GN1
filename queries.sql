@@ -93,13 +93,25 @@ FROM (SELECT reserva, datareserva, (YEAR(current_timestamp) - YEAR(dtnascimento)
         FROM BILHETE join RESERVA R2 on BILHETE.reserva = R2.ident)
             as A on passageiro = nid) as B
 GROUP BY B.reserva, B.datareserva
+;
 
+SELECT PASSAGEIRO.nome FROM 
+	(((((VIAGEM JOIN ESTACAO ON estchegada = nome)
+	JOIN LOCALIDADE ON localidade = codpostal)
+	JOIN RESERVA ON VIAGEM.ident = viagem)
+	JOIN BILHETE ON RESERVA.ident = reserva) 
+	JOIN PASSAGEIRO ON BILHETE.passageiro = nid)
+		WHERE LOCALIDADE.nome = 'seixal'
+		ORDER BY PASSAGEIRO.nome
 
+		
+SELECT PASSAGEIRO.nome FROM 
+	(((((VIAGEM JOIN ESTACAO ON estchegada = nome)
+	JOIN LOCALIDADE ON localidade = codpostal)
+	JOIN RESERVA ON VIAGEM.ident = viagem)
+	JOIN BILHETE ON RESERVA.ident = reserva) 
+	JOIN PASSAGEIRO ON BILHETE.passageiro = nid)
+		WHERE LOCALIDADE.nome = 'seixal'
+		ORDER BY PASSAGEIRO.dtnascimento 	DESC
 
-
-
-
-
-
-
-
+;
