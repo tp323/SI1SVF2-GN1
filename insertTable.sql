@@ -13,7 +13,8 @@
             (1975634,'Vale dos Lobos'),
             (9874652,'Seixal'),
             (8997774,'Lisboa'),
-            (1111111,'Portas de Sol')
+            (1111111,'Portas de Sol'),
+            (9174585,'Beja')
 
         insert into AUTOCARROTIPO values
             ('MAN','City C', 102),
@@ -47,20 +48,24 @@
             ('Urbanizacao','paragem',2,1325984),
             ('Vermelha','paragem',3,9874652),
             ('Agua Doce','paragem',5,9874652),
-            ('Baixa', 'terminal',9,8997774)
+            ('Baixa', 'terminal',9,8997774),
+            ('Parque das Nacoes','terminal',8,8997774),
+            ('Beja','paragem',4,9174585)
 
         insert into VIAGEM values
             (645,'2021-12-05','14:00:00', '16:30:00',120,'Amadora','Vermelha'),
             (456,'2021-08-15','11:00:00', '17:15:00',600,'Agua Doce','Urbanizacao'),
             (768,'2021-11-19','09:00:00', '09:30:00',25,'Vermelha','Agua Doce'),
-            (123,'2021-06-30','19:45:00', '22:05:00',300,'Santarem','Baixa'),
-            (987,'2021-07-14','09:00:00', '15:00:00',750,'Baixa','Urbanizacao')
+            (123,'2021-05-26','19:50:00', '22:30:00',300,'Santarem','Baixa'),
+            (987,'2021-07-14','09:00:00', '15:00:00',750,'Baixa','Urbanizacao'),
+            (001,'2021-07-08','10:30:00', '16:00:00',700,'Urbanizacao','Amadora')
+
 
         insert into RESERVA values
             (2231,'2021-11-19 19:00:00','MB',645),
             (8774,'2021-02-10 07:30:00','Pay Pal',768),
             (1357,'2021-07-05 10:45:30','CC',456),
-            (9348,'2021-05-23 12:15:45','MB',123)
+            (9348,'2020-05-23 12:15:45','MB',123)
 
         insert into TRANSPORTE values
             (2,987,100,'2020-01-20','A'),
@@ -70,7 +75,8 @@
             (6,123,140,'2020-10-29','C'),
             (7,123,120,'2020-11-14','C'),
             (8,123,125,'2020-09-03','C'),
-            (9,456,130,'2020-08-21','C')
+            (9,456,130,'2020-08-21','C'),
+            (10,001,145,'2021-03-11','C')
 
         insert into AUTOCARRO values
             ('CF-01-RF',2,'2022-03-26','VOLVO','9900'),
@@ -82,7 +88,8 @@
             (6,'IR',6),
             (7,'IC',4),
             (8,'IR',5),
-            (9,'AP',7)
+            (9,'AP',7),
+            (10,'IR',5)
 
         insert into LUGAR values
             (217,3,878),
@@ -112,7 +119,8 @@
             (145,7,'Stadler'),
             (345,8,'Medway'),
             (741,3,'Mehano'),
-            (648,9,'Medway')
+            (648,9,'Medway'),
+            (999,10,'Roco')
 
         insert into ALFAPENDULAR values
             (741,3,8),
