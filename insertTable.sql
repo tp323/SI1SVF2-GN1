@@ -9,10 +9,10 @@
 
         insert into LOCALIDADE values
             (2650888,'Amadora'),
-            (1325984,'Bairro do Cerco'),
+            (1325984,'Porto'),
             (1975634,'Vale dos Lobos'),
             (9874652,'Seixal'),
-            (8997774,'Rossio'),
+            (8997774,'Lisboa'),
             (1111111,'Portas de Sol')
 
         insert into AUTOCARROTIPO values
@@ -44,7 +44,7 @@
         insert into ESTACAO values
             ('Amadora','paragem',4,2650888),
             ('Santarem','terminal',8,1111111),
-            ('Urbanizacao','paragem',2,1975634),
+            ('Urbanizacao','paragem',2,1325984),
             ('Vermelha','paragem',3,9874652),
             ('Agua Doce','paragem',5,9874652),
             ('Baixa', 'terminal',9,8997774)
@@ -53,7 +53,8 @@
             (645,'2021-12-05','14:00:00', '16:30:00',120,'Amadora','Vermelha'),
             (456,'2021-08-15','11:00:00', '17:15:00',600,'Agua Doce','Urbanizacao'),
             (768,'2021-11-19','09:00:00', '09:30:00',25,'Vermelha','Agua Doce'),
-            (123,'2021-06-30','19:45:00', '22:05:00',300,'Santarem','Baixa')
+            (123,'2021-06-30','19:45:00', '22:05:00',300,'Santarem','Baixa'),
+            (987,'2021-07-14','09:00:00', '15:00:00',750,'Baixa','Urbanizacao')
 
         insert into RESERVA values
             (2231,'2021-11-19 19:00:00','MB',645),
@@ -62,7 +63,7 @@
             (9348,'2021-05-23 12:15:45','MB',123)
 
         insert into TRANSPORTE values
-            (2,645,100,'2020-01-20','A'),
+            (2,987,100,'2020-01-20','A'),
             (3,456,120,'2020-09-15','C'),
             (4,768,90,'2020-04-19','A'),
             (5,123,150,'2020-11-30','C'),
