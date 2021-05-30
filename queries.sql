@@ -95,6 +95,8 @@ FROM (SELECT reserva, datareserva, (YEAR(current_timestamp) - YEAR(dtnascimento)
 GROUP BY B.reserva, B.datareserva
 ;
 
+
+--3B
 SELECT PASSAGEIRO.nome FROM 
 	(((((VIAGEM JOIN ESTACAO ON estchegada = nome)
 	JOIN LOCALIDADE ON localidade = codpostal)
@@ -115,3 +117,25 @@ SELECT PASSAGEIRO.nome FROM
 		ORDER BY PASSAGEIRO.dtnascimento 	DESC
 
 ;
+--3C
+--SELECT A.ident FROM
+	--(SELECT LOCALIDADE.nome as cheg, VIAGEM.ident FROM ((VIAGEM JOIN ESTACAO ON estchegada = nome ) 
+	--JOIN LOCALIDADE ON localidade = codpostal ) WHERE LOCALIDADE.nome = 'Seixal') as A
+	--(SELECT LOCALIDADE.nome as part, VIAGEM.ident FROM ((VIAGEM JOIN ESTACAO ON estchegada = nome ) 
+	--JOIN LOCALIDADE ON localidade = codpostal ) WHERE LOCALIDADE.nome = 'Porto') as B
+	--WHERE A.cheg = 'Seixal' AND B.part = 'Porto';
+	
+SELECT ident 
+	FROM VIAGEM JOIN ESTACAO ON estpartida = nome JOIN ESTACAO as a estchegada = a.nome;
+	
+SELECT LOCALIDADE.nome estacaopartida , b.nome estacaoviagem, Viagem.ident viagem 
+	FROM VIAGEM JOIN ESTACAO ON estchegada = nome JOIN LOCALIDADE ON ESTACAO.localidade = LOCALIDADE.nome 
+	JOIN ESTACAO a ON estpartida = a.nome JOIN LOCALIDADE b ON a.localidade = b.nome 
+	WHERE ESTACAO.nome = 'Seixal' AND a.nome = 'Porto'
+
+
+;
+	
+
+
+	
