@@ -77,6 +77,12 @@ FROM (SELECT nlugares, transporte
                          as F on F.transporte = BILHETE.transporte
                          GROUP BY (F.transporte)) as G on H.transporte = G.transporte
 
+--ex 3 a ex e
+
+SELECT genero, COUNT(genero) as contagem
+FROM PASSAGEIRO
+GROUP BY genero
+
 --ex 3 a ex f
 
 SELECT COUNT(preco) as soma
