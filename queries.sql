@@ -1,17 +1,17 @@
 --ex3 a ex2 a
 SELECT dataviagem, horapartida
 FROM VIAGEM
-where ( VIAGEM.estpartida in
+WHERE (estpartida in
         (SELECT ESTACAO.nome
-        from (ESTACAO join LOCALIDADE L on L.codpostal = ESTACAO.localidade)
-        where L.nome = 'Lisboa')
-    AND VIAGEM.estchegada in (SELECT ESTACAO.nome
-        from (ESTACAO join LOCALIDADE L on L.codpostal = ESTACAO.localidade )
-            where L.nome = 'Porto'))
+        FROM (ESTACAO join LOCALIDADE L on L.codpostal = ESTACAO.localidade)
+        WHERE L.nome = 'Lisboa')
+    AND estchegada in (SELECT ESTACAO.nome
+        FROM (ESTACAO join LOCALIDADE L on L.codpostal = ESTACAO.localidade )
+            WHERE L.nome = 'Porto'))
 
 --ex3 a ex c
 SELECT B.marca, B.modelo, AT.nlugares
-from AUTOCARROTIPO AT join
+FROM AUTOCARROTIPO AT join
     (select marca, modelo
     from (AUTOCARRO
         join (select ident
@@ -97,48 +97,49 @@ GROUP BY B.reserva, B.datareserva
 
 
 --3B
-SELECT PASSAGEIRO.nome FROM 
+SELECT PASSAGEIRO.nome AS nome_pass FROM 
 	(((((VIAGEM JOIN ESTACAO ON estchegada = nome)
 	JOIN LOCALIDADE ON localidade = codpostal)
 	JOIN RESERVA ON VIAGEM.ident = viagem)
 	JOIN BILHETE ON RESERVA.ident = reserva) 
 	JOIN PASSAGEIRO ON BILHETE.passageiro = nid)
-		WHERE LOCALIDADE.nome = 'seixal'
+		WHERE LOCALIDADE.nome = 'Lisboa'
 		ORDER BY PASSAGEIRO.nome
 
-		
 SELECT PASSAGEIRO.nome FROM 
 	(((((VIAGEM JOIN ESTACAO ON estchegada = nome)
 	JOIN LOCALIDADE ON localidade = codpostal)
 	JOIN RESERVA ON VIAGEM.ident = viagem)
 	JOIN BILHETE ON RESERVA.ident = reserva) 
 	JOIN PASSAGEIRO ON BILHETE.passageiro = nid)
-		WHERE LOCALIDADE.nome = 'seixal'
+		WHERE LOCALIDADE.nome = 'Lisboa'
 		ORDER BY PASSAGEIRO.dtnascimento 	DESC
 
 ;
 
 --3C
---SELECT A.ident FROM
-	--(SELECT LOCALIDADE.nome as cheg, VIAGEM.ident FROM ((VIAGEM JOIN ESTACAO ON estchegada = nome ) 
-	--JOIN LOCALIDADE ON localidade = codpostal ) WHERE LOCALIDADE.nome = 'Seixal') as A
-	--(SELECT LOCALIDADE.nome as part, VIAGEM.ident FROM ((VIAGEM JOIN ESTACAO ON estchegada = nome ) 
-	--JOIN LOCALIDADE ON localidade = codpostal ) WHERE LOCALIDADE.nome = 'Porto') as B
-	--WHERE A.cheg = 'Seixal' AND B.part = 'Porto';
-	
-SELECT ident 
-	FROM VIAGEM JOIN ESTACAO ON estpartida = nome JOIN ESTACAO as a estchegada = a.nome;
-	
-SELECT LOCALIDADE.nome estacaopartida , b.nome estacaoviagem, Viagem.ident viagem 
-	FROM VIAGEM JOIN ESTACAO ON estchegada = nome JOIN LOCALIDADE ON ESTACAO.localidade = LOCALIDADE.nome 
-	JOIN ESTACAO a ON estpartida = a.nome JOIN LOCALIDADE b ON a.localidade = b.nome 
-	WHERE ESTACAO.nome = 'Seixal' AND a.nome = 'Porto'
-
-
+SELECT LOCALIDADE.nome estacaochegada , b.nome estacaopartida, Viagem.ident viagem 
+	FROM VIAGEM JOIN ESTACAO ON estchegada = nome JOIN LOCALIDADE ON ESTACAO.localidade = LOCALIDADE.codpostal 
+	JOIN ESTACAO a ON estpartida = a.nome JOIN LOCALIDADE b ON a.localidade = b.codpostal 
+	WHERE LOCALIDADE.nome = 'Porto' AND b.nome = 'Lisboa' AND horapartida >= '06:00:00' AND horachegada <= '12:00:00'
 ;
-	
+
+--3D
+SELECT PASSAGEIRO.nome, RESERVA.modopagamento, datediff(YEAR , PASSAGEIRO.dtnascimento, CURRENT_TIMESTAMP) 
+	FROM PASSAGEIRO JOIN BILHETE ON nid = passageiro JOIN RESERVA ON reserva = ident;
+
+SELECT modopagamento, AVG(datediff(YEAR , PASSAGEIRO.dtnascimento, CURRENT_TIMESTAMP)) AS avg_age_by_payment_method
+	FROM (PASSAGEIRO JOIN BILHETE ON nid = passageiro JOIN RESERVA ON reserva = ident)
+	GROUP BY modopagamento;
+
+--3E
+SELECT PASSAGEIRO.nome, COUNT(reserva) 
+	FROM PASSAGEIRO JOIN BILHETE ON nid = passageiro 
+	GROUP BY PASSAGEIRO.nome
+	ORDER BY COUNT(reserva) DESC;
 
 
+--3F
 CREATE VIEW reservationinfo (identification, dateofreservation, paymentmethod, trip) as
     SELECT ident, datareserva, modopagamento, viagem
     FROM RESERVA
@@ -147,9 +148,20 @@ CREATE VIEW reservationinfo (identification, dateofreservation, paymentmethod, t
 drop view reservationinfo
 
 
+
+--3G
 CREATE VIEW tripinfo (identification, startstation, endstation, inicialhour, duration_in_min) as
     SELECT ident, horapartida, estpartida, estchegada, datediff(minute, horapartida, horachegada) as duracao
     FROM VIAGEM
     WHERE datediff(day,CURRENT_TIMESTAMP,dataviagem) = 0 and datediff(second , horapartida, cast(CURRENT_TIMESTAMP as time (0))) > 0 and datediff(second, cast(CURRENT_TIMESTAMP as time (0)), horachegada ) > 0
 
 drop view tripinfo
+
+
+--4
+UPDATE VIAGEM
+	SET estpartida = 'Parque das Nacoes', estchegada = 'Beja', horapartida = '12:00:00', horachegada  = '14:18:00', distancia = 138
+	FROM VIAGEM JOIN TRANSPORTE ON VIAGEM.ident = TRANSPORTE.viagem JOIN COMBOIO ON TRANSPORTE.ident = COMBOIO.transporte
+	WHERE horapartida = '10:30:00' AND COMBOIO.tipo = 'IR';
+
+
