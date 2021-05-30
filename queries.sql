@@ -117,6 +117,7 @@ SELECT PASSAGEIRO.nome FROM
 		ORDER BY PASSAGEIRO.dtnascimento 	DESC
 
 ;
+
 --3C
 --SELECT A.ident FROM
 	--(SELECT LOCALIDADE.nome as cheg, VIAGEM.ident FROM ((VIAGEM JOIN ESTACAO ON estchegada = nome ) 
@@ -138,4 +139,17 @@ SELECT LOCALIDADE.nome estacaopartida , b.nome estacaoviagem, Viagem.ident viage
 	
 
 
-	
+CREATE VIEW reservationinfo (identification, dateofreservation, paymentmethod, trip) as
+    SELECT ident, datareserva, modopagamento, viagem
+    FROM RESERVA
+    WHERE YEAR(CURRENT_TIMESTAMP) - YEAR(datareserva) = 1
+
+drop view reservationinfo
+
+
+CREATE VIEW tripinfo (identification, startstation, endstation, inicialhour, duration_in_min) as
+    SELECT ident, horapartida, estpartida, estchegada, datediff(minute, horapartida, horachegada) as duracao
+    FROM VIAGEM
+    WHERE datediff(day,CURRENT_TIMESTAMP,dataviagem) = 0 and datediff(second , horapartida, cast(CURRENT_TIMESTAMP as time (0))) > 0 and datediff(second, cast(CURRENT_TIMESTAMP as time (0)), horachegada ) > 0
+
+drop view tripinfo
